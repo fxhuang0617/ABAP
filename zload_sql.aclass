@@ -1,0 +1,48 @@
+CLASS zload_sql DEFINITION PUBLIC FINAL CREATE PUBLIC.
+  PUBLIC SECTION.
+    INTERFACES if_oo_adt_classrun.
+ENDCLASS.
+
+CLASS zload_sql IMPLEMENTATION.
+  METHOD if_oo_adt_classrun~main.
+
+    " 1) 先刪舊資料（避免主鍵重複）
+    DELETE FROM zmaterial WHERE material_id IN ( 'M1001', 'M1002' ).
+
+    " 2) 準備工作區（明確型別，最保險）
+    DATA ls_mat TYPE zmaterial.
+
+
+    " 2-1) 第一筆
+    CLEAR ls_mat.
+    ls_mat-client         = sy-mandt.                       " 若表有 client 欄位
+    ls_mat-material_id    = 'M1001'.
+    ls_mat-material_name  = 'Stainless Screw'.
+    ls_mat-material_type  = 'FG'.
+    ls_mat-base_unit      = 'EA'.                           " 建議用 EA/KG
+    ls_mat-currency       = 'USD'.
+    ls_mat-standard_price = '0.25'.
+
+    INSERT zmaterial FROM @ls_mat.                          " ← 注意 @
+
+    " 2-2) 第二筆
+    CLEAR ls_mat.
+    ls_mat-client         = sy-mandt.
+    ls_mat-material_id    = 'M1002'.
+    ls_mat-material_name  = 'Aluminum Sheet'.
+    ls_mat-material_type  = 'RM'.
+    ls_mat-base_unit      = 'KG'.
+    ls_mat-currency       = 'USD'.
+    ls_mat-standard_price = '3.50'.
+
+    INSERT zmaterial FROM @ls_mat.
+
+    " 3) 送出交易
+    COMMIT WORK.
+
+    " 4) 驗證：讀回總筆數
+    SELECT COUNT(*) FROM zmaterial INTO @DATA(lv_cnt).
+    out->write( |Inserted 2 rows. Current total rows: { lv_cnt }| ).
+
+  ENDMETHOD.
+ENDCLASS.

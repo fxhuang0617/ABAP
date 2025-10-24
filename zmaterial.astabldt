@@ -1,0 +1,18 @@
+@EndUserText.label : 'Material_Demo'
+@AbapCatalog.enhancement.category : #NOT_EXTENSIBLE
+@AbapCatalog.tableCategory : #TRANSPARENT
+@AbapCatalog.deliveryClass : #A
+@AbapCatalog.dataMaintenance : #RESTRICTED
+define table zmaterial {
+
+  key client      : abap.clnt not null;
+  key material_id : abap.char(10) not null;
+  material_name   : abap.char(40);
+  material_type   : abap.char(10);
+  base_unit       : abap.unit(3);
+  currency        : abap.cuky;
+  @Semantics.amount.currencyCode : 'zmaterial.currency'
+  standard_price  : abap.curr(15,2);
+  created_at      : abap.utclong;
+
+}

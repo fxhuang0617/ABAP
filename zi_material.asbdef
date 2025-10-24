@@ -1,0 +1,15 @@
+managed implementation in class zbp_i_material unique;
+strict ( 2 );
+
+define behavior for ZI_MATERIAL alias Material
+persistent table zmaterial
+lock master
+authorization master ( global )
+//etag master <field_name>
+{
+  create;
+  update;
+  delete;
+  field ( readonly ) material_id; //material_id is not editable
+  field (mandatory) material_name; //Necessary info
+}

@@ -1,0 +1,4 @@
+@EndUserText.label: 'Service_def'
+define service ZUI_MATERIAL {
+  expose ZI_MATERIAL;
+}
